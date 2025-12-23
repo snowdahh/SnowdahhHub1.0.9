@@ -1,0 +1,237 @@
+-- SnowdahhHub V 1.4.3 (UI v1.0.9) - Full restoration
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local GuiService = game:GetService("GuiService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+if playerGui:FindFirstChild("SnowdahhHub") then playerGui.SnowdahhHub:Destroy() end
+
+local snowdahhHub = Instance.new("ScreenGui", playerGui)
+snowdahhHub.Name = "SnowdahhHub"
+snowdahhHub.ResetOnSpawn = false
+
+local Theme = {
+    Main = Color3.fromRGB(20, 20, 25),
+    Accent = Color3.fromRGB(0, 190, 255),
+    Sidebar = Color3.fromRGB(28, 28, 33),
+    Button = Color3.fromRGB(38, 38, 43),
+    Text = Color3.fromRGB(255, 255, 255),
+    SecondaryText = Color3.fromRGB(160, 160, 160),
+    Discord = Color3.fromRGB(88, 101, 242)
+}
+
+-- 1. Base Principal
+local sHub = Instance.new("Frame", snowdahhHub)
+sHub.Name = "MainFrame"
+sHub.AnchorPoint = Vector2.new(0.5, 0.5)
+sHub.Size = UDim2.new(0, 0, 0, 0) 
+sHub.Position = UDim2.new(0.5, 0, 0.5, 0)
+sHub.BackgroundColor3 = Theme.Main
+sHub.BorderSizePixel = 0
+sHub.ClipsDescendants = true
+Instance.new("UICorner", sHub).CornerRadius = UDim.new(0, 10)
+
+local stroke = Instance.new("UIStroke", sHub)
+stroke.Color = Theme.Accent
+stroke.Thickness = 1.5
+stroke.Transparency = 1
+
+-- 2. Sistema de Key (Bloqueo inicial)
+local keyFrame = Instance.new("Frame", sHub)
+keyFrame.Size = UDim2.new(1, 0, 1, 0)
+keyFrame.BackgroundTransparency = 1
+keyFrame.Visible = false
+keyFrame.ZIndex = 10
+
+local keyInput = Instance.new("TextBox", keyFrame)
+keyInput.Size = UDim2.new(0, 250, 0, 40)
+keyInput.Position = UDim2.new(0.5, -125, 0.45, -20)
+keyInput.BackgroundColor3 = Theme.Button
+keyInput.TextColor3 = Theme.Text
+keyInput.PlaceholderText = "INGRESA LA KEY AQUÍ"
+keyInput.Font = Enum.Font.GothamSemibold
+keyInput.TextSize = 14
+Instance.new("UICorner", keyInput)
+
+local checkBtn = Instance.new("TextButton", keyFrame)
+checkBtn.Size = UDim2.new(0, 150, 0, 35)
+checkBtn.Position = UDim2.new(0.5, -75, 0.6, 0)
+checkBtn.BackgroundColor3 = Theme.Accent
+checkBtn.Text = "VERIFICAR"
+checkBtn.Font = Enum.Font.GothamBold
+checkBtn.TextColor3 = Theme.Main
+Instance.new("UICorner", checkBtn)
+
+-- 3. Header y Contenedores
+local header = Instance.new("Frame", sHub)
+header.Size = UDim2.new(1, 0, 0, 40)
+header.BackgroundColor3 = Theme.Sidebar
+header.BackgroundTransparency = 1
+
+local title = Instance.new("TextLabel", header)
+title.Text = "SNOWDAHH <font color='#00BEFF'>HUB</font> <font color='#888888'>v1.0.9</font>"
+title.RichText = true
+title.Size = UDim2.new(0, 300, 1, 0)
+title.Position = UDim2.new(0, 15, 0, 0)
+title.TextColor3 = Theme.Text
+title.TextSize = 16
+title.Font = Enum.Font.GothamBold
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.BackgroundTransparency = 1
+title.TextTransparency = 1
+
+local sideBar = Instance.new("ScrollingFrame", sHub)
+sideBar.Size = UDim2.new(0, 120, 1, -100)
+sideBar.Position = UDim2.new(0, 10, 0, 50)
+sideBar.BackgroundTransparency = 1
+sideBar.Visible = false
+sideBar.ScrollBarThickness = 0
+
+local pageContainer = Instance.new("Frame", sHub)
+pageContainer.Size = UDim2.new(1, -150, 1, -60)
+pageContainer.Position = UDim2.new(0, 140, 0, 50)
+pageContainer.BackgroundTransparency = 1
+pageContainer.Visible = false
+
+local discordBtn = Instance.new("ImageButton", sHub)
+discordBtn.Size = UDim2.new(0, 35, 0, 35)
+discordBtn.Position = UDim2.new(0, 15, 1, -45)
+discordBtn.BackgroundColor3 = Theme.Discord
+discordBtn.Image = "rbxassetid://10715356010"
+discordBtn.Visible = false
+Instance.new("UICorner", discordBtn).CornerRadius = UDim.new(0, 8)
+
+-- 4. Lógica de Activación Post-Key
+local function unlockHub()
+    keyFrame:Destroy()
+    sideBar.Visible = true
+    pageContainer.Visible = true
+    discordBtn.Visible = true
+    header.BackgroundTransparency = 0
+    title.TextTransparency = 0
+end
+
+checkBtn.MouseButton1Click:Connect(function()
+    if keyInput.Text == "jorgeputo123" then
+        checkBtn.Text = "¡CORRECTO!"
+        checkBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+        task.wait(1)
+        unlockHub()
+    else
+        checkBtn.Text = "KEY INCORRECTA"
+        checkBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+        task.wait(1)
+        checkBtn.Text = "VERIFICAR"
+        checkBtn.BackgroundColor3 = Theme.Accent
+    end
+end)
+
+-- 5. Animación de Apertura
+task.spawn(function()
+    local intro = Instance.new("ImageLabel", snowdahhHub)
+    intro.Size = UDim2.new(0, 80, 0, 80)
+    intro.Position = UDim2.new(0.5, 0, 0.5, 0)
+    intro.AnchorPoint = Vector2.new(0.5, 0.5)
+    intro.BackgroundTransparency = 1
+    intro.Image = "rbxassetid://137831468"
+    intro.ImageColor3 = Theme.Accent
+    
+    TweenService:Create(intro, TweenInfo.new(0.6, Enum.EasingStyle.Back), {Size = UDim2.new(0, 100, 0, 100)}):Play()
+    task.wait(0.6)
+    TweenService:Create(intro, TweenInfo.new(0.4), {ImageTransparency = 1, Rotation = 180}):Play()
+    TweenService:Create(sHub, TweenInfo.new(0.6, Enum.EasingStyle.Quart), {Size = UDim2.new(0, 580, 0, 380)}):Play()
+    TweenService:Create(stroke, TweenInfo.new(0.8), {Transparency = 0.5}):Play()
+    task.wait(0.6)
+    keyFrame.Visible = true
+    intro:Destroy()
+end)
+
+-- 6. Lógica de UI y Funciones de la Versión 1.4.3
+local pages = {}
+local function createPage(name)
+    local f = Instance.new("ScrollingFrame", pageContainer)
+    f.Size = UDim2.new(1, 0, 1, 0)
+    f.BackgroundTransparency = 1
+    f.Visible = false
+    f.ScrollBarThickness = 2
+    f.ScrollBarImageColor3 = Theme.Accent
+    Instance.new("UIListLayout", f).Padding = UDim.new(0, 6)
+    pages[name] = f
+    return f
+end
+
+local function addTab(name)
+    local b = Instance.new("TextButton", sideBar)
+    b.Size = UDim2.new(1, 0, 0, 35); b.Text = name; b.BackgroundColor3 = Theme.Button; b.TextColor3 = Theme.SecondaryText
+    b.Font = Enum.Font.GothamSemibold; b.TextSize = 14; b.BorderSizePixel = 0
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+    b.MouseButton1Click:Connect(function() for _,p in pairs(pages) do p.Visible = false end pages[name].Visible = true end)
+    Instance.new("UIListLayout", sideBar).Padding = UDim.new(0, 5)
+end
+
+local function addAction(pageName, text, cb)
+    local b = Instance.new("TextButton", pages[pageName])
+    b.Size = UDim2.new(0.98, 0, 0, 40); b.Text = text; b.BackgroundColor3 = Theme.Button; b.TextColor3 = Theme.Text
+    b.TextScaled = true; b.Font = Enum.Font.GothamSemibold; b.BorderSizePixel = 0
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+    Instance.new("UIPadding", b).PaddingLeft = UDim.new(0, 10)
+    b.MouseButton1Click:Connect(cb)
+    pages[pageName].CanvasSize = UDim2.new(0,0,0, pages[pageName].UIListLayout.AbsoluteContentSize.Y + 10)
+end
+
+-- --- CATEGORÍAS Y FUNCIONES COMPLETAS (1.4.3) ---
+createPage("Main"); createPage("Player"); createPage("Combat"); createPage("Visuals"); createPage("World"); createPage("Misc")
+addTab("Main"); addTab("Player"); addTab("Combat"); addTab("Visuals"); addTab("World"); addTab("Misc")
+pages.Main.Visible = true
+
+-- MAIN
+addAction("Main", "Infinite Yield", function() loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))() end)
+addAction("Main", "Dex Explorer", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))() end)
+addAction("Main", "Remote Spy", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/7Soraa/RemoteSpy/main/RemoteSpy.lua"))() end)
+addAction("Main", "Invisible", function() local c = player.Character if c then for _,v in pairs(c:GetDescendants()) do if v:IsA("Motor6D") and v.Name ~= "Neck" then v:Destroy() end end end end)
+addAction("Main", "Noclip", function() RunService.Stepped:Connect(function() if player.Character then for _,v in pairs(player.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end end end) end)
+addAction("Main", "Bypass Chat", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/skatbr/Luau-Scripts/main/ChatBypass.lua"))() end)
+
+-- PLAYER
+addAction("Player", "Speed 100", function() player.Character.Humanoid.WalkSpeed = 100 end)
+addAction("Player", "Jump 200", function() player.Character.Humanoid.JumpPower = 200 end)
+addAction("Player", "Spin Bot", function() local v = Instance.new("BodyAngularVelocity", player.Character.HumanoidRootPart); v.MaxTorque = Vector3.new(0, math.huge, 0); v.AngularVelocity = Vector3.new(0, 50, 0) end)
+addAction("Player", "Infinite Jump", function() UserInputService.JumpRequest:Connect(function() if player.Character then player.Character.Humanoid:ChangeState(3) end end) end)
+addAction("Player", "No Limbs", function() for _,v in pairs(player.Character:GetChildren()) do if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" and v.Name ~= "Head" then v:Destroy() end end end)
+addAction("Player", "Ctrl + TP", function() local mouse = player:GetMouse(); mouse.Button1Down:Connect(function() if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then player.Character:MoveTo(mouse.Hit.p) end end) end)
+addAction("Player", "HipHeight 10", function() player.Character.Humanoid.HipHeight = 10 end)
+
+-- COMBAT
+addAction("Combat", "Kill Aura (5000s)", function() RunService.RenderStepped:Connect(function() local r = player.Character and player.Character:FindFirstChild("HumanoidRootPart"); if not r then return end for _,p in pairs(Players:GetPlayers()) do if p ~= player and p.Character and p.Character:FindFirstChild("Humanoid") then local tr = p.Character.HumanoidRootPart; if (r.Position - tr.Position).Magnitude <= 2500 then p.Character.Humanoid.Health = 0 end end end end) end)
+addAction("Combat", "Hitbox 50", function() for _,p in pairs(Players:GetPlayers()) do if p ~= player and p.Character then p.Character.HumanoidRootPart.Size = Vector3.new(50,50,50); p.Character.HumanoidRootPart.Transparency = 0.7 end end end)
+addAction("Combat", "Kitty Sword", function() local t = Instance.new("Tool", player.Backpack); t.Name = "Kitty Sword"; local p = Instance.new("Part", t); p.Name = "Handle"; p.Size = Vector3.new(1,1,1); Instance.new("SpecialMesh", p).MeshId = "rbxassetid://137831468"; p.Touched:Connect(function(h) local hum = h.Parent:FindFirstChild("Humanoid") if hum and hum ~= player.Character.Humanoid then hum.Health = 0 end end) end)
+addAction("Combat", "Fling All", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/DigitalityScripts/RobloxScripts/main/FlingAll.lua"))() end)
+
+-- VISUALS
+addAction("Visuals", "ESP Highlight", function() for _,p in pairs(Players:GetPlayers()) do if p ~= player and p.Character then Instance.new("Highlight", p.Character).FillColor = Color3.new(1,0,0) end end end)
+addAction("Visuals", "X-Ray", function() for _,v in pairs(workspace:GetDescendants()) do if v:IsA("BasePart") and not v:IsDescendantOf(player.Character) then v.Transparency = 0.5 end end end)
+addAction("Visuals", "Full Bright", function() Lighting.Brightness = 2; Lighting.ClockTime = 14; Lighting.Ambient = Color3.new(1,1,1) end)
+addAction("Visuals", "Night Vision", function() Lighting.Brightness = 4; Lighting.OutdoorAmbient = Color3.new(1,1,1) end)
+
+-- WORLD
+addAction("World", "Delete Seats", function() for _,v in pairs(workspace:GetDescendants()) do if v:IsA("Seat") then v:Destroy() end end end)
+addAction("World", "Anti-Gravity", function() workspace.Gravity = 0 end)
+addAction("World", "Day Time", function() Lighting.ClockTime = 14 end)
+addAction("World", "Low Quality", function() for _,v in pairs(workspace:GetDescendants()) do if v:IsA("BasePart") then v.Material = Enum.Material.Plastic end end end)
+
+-- MISC
+addAction("Misc", "Anti-AFK", function() player.Idled:Connect(function() game:GetService("VirtualUser"):ClickButton2(Vector2.new()) end) end)
+addAction("Misc", "Server Hop", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDSF/Roblox/main/ServerHop.lua"))() end)
+addAction("Misc", "FPS Booster", function() for _,v in pairs(workspace:GetDescendants()) do if v:IsA("BasePart") then v.Material = Enum.Material.SmoothPlastic end end; Lighting.GlobalShadows = false end)
+addAction("Misc", "Headless", function() if player.Character and player.Character:FindFirstChild("Head") then player.Character.Head.Transparency = 1; if player.Character.Head:FindFirstChild("face") then player.Character.Head.face.Transparency = 1 end end end)
+
+-- Arrastre
+local d, s, p
+sHub.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 then d = true; s = i.Position; p = sHub.Position end end)
+UserInputService.InputChanged:Connect(function(i) if d and i.UserInputType == Enum.UserInputType.MouseMovement then local del = i.Position - s; sHub.Position = UDim2.new(p.X.Scale, p.X.Offset + del.X, p.Y.Scale, p.Y.Offset + del.Y) end end)
+UserInputService.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 then d = false end end)
